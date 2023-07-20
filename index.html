@@ -4,9 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Dashboard</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
+    <header>
+        <h1>Weather Dashboard</h1>
+        <form id = "searchForm">
+            <input type = "text" id = "city" placeholder = "Enter City Name">
+            <button type = "submit" id = "searchButton">Search</button>
+        </form>
+    </header>
+        <section>
+            <div id = "currentWeather">
+             current weather   
+            </div>
+            <div id = "futureWeather">
+             future weather
+        </section>
+  
+       
+    
     <script src="./assets/js/script.js"></script> 
 </body>
 </html>
