@@ -40,15 +40,26 @@ function fetchCurrentWeather(citylat, citylon) {
   }).then(function (response) {
     console.log("Weather current response");
     console.log(response);
+    createCurrentCard(response);
   });
 }
 
 function saveToStorage(cityName) {
-    //adds it to local storage (array of cities)
+    // add cityName to local storage using setItem
+    var cities = JSON.parse(localStorage.getItem("cities")) || [];
+    cities.push(cityName);
+    localStorage.setItem("cities", JSON.stringify(cities));
+    console.log(cities);
 }
 
 function renderStorage(){
     ///reads your local storage and iterates through it if there is anything in it      
+    var cities = JSON.parse(localStorage.getItem("cities")) || [];
+    for (var i = 0; i < cities.length; i++) {
+        var city = cities[i];
+        var button = $("<button>").text(city);
+        $("#searchHistory").append(button);
+    }
 }
 
 function fetchForecastWeather(citylat, citylon) {
@@ -64,8 +75,8 @@ function fetchForecastWeather(citylat, citylon) {
     url: queryURL,
     method: "GET",
   }).then(function (response) {
-    console.log("Froecast response");
-    console.log(response);
+    // console.log("Froecast response");
+    // console.log(response);
     createForecastCards(response.list);
   });
 }
@@ -74,17 +85,41 @@ $("#searchButton").on("click", function (event) {
   event.preventDefault();
   // get value from search input and store in local storage
   var cityName = $("#city").val().trim();
-  console.log(cityName);
+//   console.log(cityName);
   searchGeoCode(cityName);
 
 });
 
 
-// display current weather data
+// fuction to create card container for current weather
+function createCurrentCard(data) {
+    console.log(data);
+    var cardContainerCur = $("#currentWeather");
+    console.log(cardContainerCur);
+    var cardData = {
+        temp: data.main.temp,
+        humidity: data.main.humidity,
+        windSpeed: data.wind.speed,
+        iconURL :"http://openweathermap.org/img/w/" + data.weather[0].icon + ".png"
+    }
+    console.log(cardData)
+    var card = $("<div>").addClass("card");
+    var image = $("<img>").attr("src", cardData.iconURL);
+    var temp = $("<p>").text("Temp: " + cardData.temp + " F");
+    var humidity = $("<p>").text("Humidity: " + cardData.humidity + "%");
+    var windSpeed = $("<p>").text("Wind Speed: " + cardData.windSpeed + " MPH");
+    card.append(image)
+    card.append(temp);
+    card.append(humidity);
+    card.append(windSpeed);
+    console.log(card)
+    cardContainerCur.append(card);
+    
+}
 
 // display 5 day forecast
 function createForecastCards(data) {
-  console.log(data);
+//   console.log(data);
   // 0 - 8 - 16 - 24 - 32
   var startingIndex;
   for (var i = 0; i < data.length; i++) {
@@ -98,7 +133,7 @@ function createForecastCards(data) {
   var cardContainer = $("#futureWeather");
   console.log(cardContainer);
   for (var i = startingIndex; i < data.length; i += 8) {
-      console.log(data[i]);
+    //   console.log(data[i]);
       //we can hold data about each card and day in an object
       var cardData = {
           date: data[i].dt_txt.split(" ")[0],
@@ -107,14 +142,20 @@ function createForecastCards(data) {
           windSpeed: data[i].wind.speed,
           iconURL :"http://openweathermap.org/img/w/" + data[i].weather[0].icon + ".png"
     }
-    console.log(cardData)
+    // console.log(cardData)
     //create a card for each day
     //p tags
     var card = $("<div>").addClass("card");
-    var temp = $("<p>").text("Temp: " + cardData.minTemp + " F");
     var image = $("<img>").attr("src", cardData.iconURL);
-    card.append(temp);
+    var temp = $("<p>").text("Temp: " + cardData.minTemp + " F");
+    var humidity = $("<p>").text("Humidity: " + cardData.humidity + "%");
+    var windSpeed = $("<p>").text("Wind Speed: " + cardData.windSpeed + " MPH");
+    var date = $("<p>").text(cardData.date);
+    card.append(date);
     card.append(image)
+    card.append(temp);
+    card.append(humidity);
+    card.append(windSpeed);
     console.log(card)
     //add the card the the futureWeather div
     cardContainer.append(card);
