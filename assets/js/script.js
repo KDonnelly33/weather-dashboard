@@ -30,8 +30,14 @@ function saveStorage(cityName) {
     cityArray.push(cityName);
     localStorage.setItem("cityArray", JSON.stringify(cityArray));
     renderStorage();
-    console.log(cityArray);
-  }}
+  }
+  // make sure the cityArray is not longer than 5
+  if (cityArray.length > 5) {
+    cityArray.shift();
+    localStorage.setItem("cityArray", JSON.stringify(cityArray));
+    renderStorage();
+  }
+}
 renderStorage();
 ///reads your local storage and iterates through it if there is anything in it and creates a button for each city
 function renderStorage() {
@@ -42,7 +48,8 @@ function renderStorage() {
     var cityDiv = $("<div>").addClass("cityDiv");
     cityDiv.append(cityButton);
     $("#searchHistoryDisplay").append(cityDiv);
-  }}
+  }
+}
 
 // function to get current weather data using lat and lon
 function fetchCurrentWeather(citylat, citylon) {
@@ -159,5 +166,4 @@ $("#searchHistoryDisplay").on("click", function (event) {
   $("#futureWeather").empty();
   var cityName = event.target.textContent;
   searchGeoCode(cityName);
-
 });
