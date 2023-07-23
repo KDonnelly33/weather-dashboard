@@ -25,25 +25,23 @@ function searchGeoCode(cityName) {
 }
 // function to save city name to local storage
 function saveStorage(cityName) {
-    var cityArray = JSON.parse(localStorage.getItem("cityArray")) || [];
-    cityArray.push(cityName);
-    localStorage.setItem("cityArray", JSON.stringify(cityArray));
-    console.log(cityArray);
-    renderStorage();
+  var cityArray = JSON.parse(localStorage.getItem("cityArray")) || [];
+  cityArray.push(cityName);
+  localStorage.setItem("cityArray", JSON.stringify(cityArray));
+  console.log(cityArray);
+  renderStorage();
 }
-
 
 ///reads your local storage and iterates through it if there is anything in it and creates a button for each city
 function renderStorage() {
-    var cityArray = JSON.parse(localStorage.getItem("cityArray")) || [];
-    $("#searcHistoryDisplay").empty();
-    for (var i = 0; i < cityArray.length; i++) {
-        var cityButton = $("<button>");
-        cityButton.text(cityArray[i]);
-        cityButton.addClass("cityButton");
-        $("#seachHistoryDisplay").append(cityButton);
-    }
-}
+  var cityArray = JSON.parse(localStorage.getItem("cityArray")) || [];
+  $("#searchHistoryDisplay").empty();
+  for (var i = 0; i < cityArray.length; i++) {
+    var cityButton = $("<button>").text(cityArray[i]);
+    var cityDiv = $("<div>").addClass("cityDiv");
+    cityDiv.append(cityButton);
+    $("#searchHistoryDisplay").append(cityDiv);
+  }}
 
 // function to get current weather data using lat and lon
 function fetchCurrentWeather(citylat, citylon) {
@@ -86,7 +84,6 @@ $("#searchButton").on("click", function (event) {
   // get value from search input and store in local storage
   var cityName = $("#city").val().trim();
   searchGeoCode(cityName);
-
 });
 
 // fuction to create card container for current weather
