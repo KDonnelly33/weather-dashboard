@@ -23,15 +23,16 @@ function searchGeoCode(cityName) {
     saveStorage(cityName);
   });
 }
-// function to save city name to local storage
+// function to check if city name is in local storage and if not add it
 function saveStorage(cityName) {
   var cityArray = JSON.parse(localStorage.getItem("cityArray")) || [];
-  cityArray.push(cityName);
-  localStorage.setItem("cityArray", JSON.stringify(cityArray));
-  console.log(cityArray);
-  renderStorage();
-}
-
+  if (!cityArray.includes(cityName)) {
+    cityArray.push(cityName);
+    localStorage.setItem("cityArray", JSON.stringify(cityArray));
+    renderStorage();
+    console.log(cityArray);
+  }}
+renderStorage();
 ///reads your local storage and iterates through it if there is anything in it and creates a button for each city
 function renderStorage() {
   var cityArray = JSON.parse(localStorage.getItem("cityArray")) || [];
@@ -81,8 +82,12 @@ function fetchForecastWeather(citylat, citylon) {
 // add event listener to search button
 $("#searchButton").on("click", function (event) {
   event.preventDefault();
-  // get value from search input and store in local storage
+  // clear current and future weather cards
+  $("#currentWeather").empty();
+  $("#futureWeather").empty();
+  // get value from search input and clear input
   var cityName = $("#city").val().trim();
+  $("#city").val("");
   searchGeoCode(cityName);
 });
 
@@ -146,3 +151,13 @@ function createForecastCards(data) {
     cardContainer.append(card);
   }
 }
+// add event listener to search history buttons
+$("#searchHistoryDisplay").on("click", function (event) {
+  event.preventDefault();
+  // clear current and future weather cards
+  $("#currentWeather").empty();
+  $("#futureWeather").empty();
+  var cityName = event.target.textContent;
+  searchGeoCode(cityName);
+
+});
