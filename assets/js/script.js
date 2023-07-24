@@ -6,7 +6,7 @@ var citylon;
 // function to get lat and lon from city name using geo api
 function searchGeoCode(cityName) {
   var cordURL =
-    "http://api.openweathermap.org/geo/1.0/direct?q=" +
+    "https://api.openweathermap.org/geo/1.0/direct?q=" +
     cityName +
     "&limit=5&appid=" +
     apiKey;
@@ -59,7 +59,7 @@ function renderStorage() {
 // function to get current weather data using lat and lon
 function fetchCurrentWeather(citylat, citylon) {
   var currentURl =
-    "http://api.openweathermap.org/data/2.5/weather?lat=" +
+    "https://api.openweathermap.org/data/2.5/weather?lat=" +
     citylat +
     "&lon=" +
     citylon +
