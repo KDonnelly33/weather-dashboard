@@ -18,14 +18,17 @@ function searchGeoCode(cityName) {
     // set lat and lon to variables
     var citylat = response[0].lat;
     var citylon = response[0].lon;
+    // call functions to get current and future weather
     fetchCurrentWeather(citylat, citylon);
     fetchForecastWeather(citylat, citylon);
+    // call function to save city name to local storage
     saveStorage(cityName);
   });
 }
-// function to check if city name is in local storage and if not add it
+// function to add city name to local storage
 function saveStorage(cityName) {
   var cityArray = JSON.parse(localStorage.getItem("cityArray")) || [];
+  // make sure the city name is not already in the array
   if (!cityArray.includes(cityName)) {
     cityArray.push(cityName);
     localStorage.setItem("cityArray", JSON.stringify(cityArray));
@@ -45,6 +48,8 @@ function renderStorage() {
   $("#searchHistoryDisplay").empty();
   for (var i = 0; i < cityArray.length; i++) {
     var cityButton = $("<button>").text(cityArray[i]);
+    // add class to button
+    cityButton.addClass("cityButton");
     var cityDiv = $("<div>").addClass("cityDiv");
     cityDiv.append(cityButton);
     $("#searchHistoryDisplay").append(cityDiv);
@@ -65,6 +70,7 @@ function fetchCurrentWeather(citylat, citylon) {
     url: currentURl,
     method: "GET",
   }).then(function (response) {
+    // call function to create current weather card
     createCurrentCard(response);
   });
 }
@@ -83,6 +89,7 @@ function fetchForecastWeather(citylat, citylon) {
     url: queryURL,
     method: "GET",
   }).then(function (response) {
+    // call function to create future weather cards
     createForecastCards(response.list);
   });
 }
@@ -92,8 +99,9 @@ $("#searchButton").on("click", function (event) {
   // clear current and future weather cards
   $("#currentWeather").empty();
   $("#futureWeather").empty();
-  // get value from search input and clear input
+  // get value from search input
   var cityName = $("#city").val().trim();
+  // clear search input
   $("#city").val("");
   searchGeoCode(cityName);
 });
@@ -112,6 +120,8 @@ function createCurrentCard(data) {
   var temp = $("<p>").text("Temp: " + cardData.temp + " F");
   var humidity = $("<p>").text("Humidity: " + cardData.humidity + "%");
   var windSpeed = $("<p>").text("Wind Speed: " + cardData.windSpeed + " MPH");
+  var currentWeatherHeader = $("<h2>").text("Current Weather");
+  card.append(currentWeatherHeader);
   card.append(image);
   card.append(temp);
   card.append(humidity);
@@ -123,6 +133,7 @@ function createCurrentCard(data) {
 function createForecastCards(data) {
   // 0 - 8 - 16 - 24 - 32
   var startingIndex;
+  // iterates through to find noon
   for (var i = 0; i < data.length; i++) {
     var time = data[i].dt_txt.split(" ")[1].split(":")[0];
     if (time === "12") {
@@ -142,13 +153,12 @@ function createForecastCards(data) {
         "http://openweathermap.org/img/w/" + data[i].weather[0].icon + ".png",
     };
     //create a card for each day
-    //p tags
     var card = $("<div>").addClass("card");
     var image = $("<img>").attr("src", cardData.iconURL);
     var temp = $("<p>").text("Temp: " + cardData.minTemp + " F");
     var humidity = $("<p>").text("Humidity: " + cardData.humidity + "%");
     var windSpeed = $("<p>").text("Wind Speed: " + cardData.windSpeed + " MPH");
-    var date = $("<p>").text(cardData.date);
+    var date = $("<h3>").text(cardData.date);
     card.append(date);
     card.append(image);
     card.append(temp);
